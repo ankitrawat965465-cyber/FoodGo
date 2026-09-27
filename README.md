@@ -366,19 +366,19 @@ After placing an order, customer and order information is stored in MySQL.
 
 ## 🏠 1. FoodGo Home
 
-![FoodGo Home](screenshots/01-home.png)
+![FoodGo Home](food1.png)
 
 ---
 
 ## 🍕 2. Restaurant Menu
 
-![FoodGo Menu](screenshots/02-menu.png)
+![Restaurant Menu](food2.png)
 
 ---
 
 ## 🛒 3. Shopping Cart
 
-![FoodGo Cart](screenshots/03-cart.png)
+![Shopping Cart](food3.png)
 
 ---
 
@@ -390,7 +390,13 @@ After placing an order, customer and order information is stored in MySQL.
 
 ## 📦 5. Order Confirmation
 
-![FoodGo Order Confirmation](screenshots/05-order-confirmation.png)
+![Checkout](food4.png)
+
+---
+
+
+### ✅ Order Confirmation
+![Order Confirmation](food5.png)
 
 ---
 # 🎯 Project Objective
