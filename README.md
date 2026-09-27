@@ -76,7 +76,6 @@ The main purpose of this project is to understand how an application can be deve
 ## 🏗️ Architecture
 
 ```
-text
                          👤 User
                            │
                            ▼
@@ -378,28 +377,6 @@ MySQL Database
 ```
 
 After placing an order, customer and order information is stored in MySQL.
-
----
-
-## 📸 Application Screenshots
-
-### 🛒 Your Cart
-![FoodGo Home](food1.png)
-
-### 🍽️ Popular Restaurants
-![FoodGo Home](food2.png)
-
-### 🍕 Pizza Palace — Add to Cart
-![FoodGo Home](food3.png)
-
-### 📍 Delivery Address / Checkout
-![FoodGo Home](food4.png)
-
-### ✅ Order Confirmation
-![FoodGo Home](food5.png)
-
-### 🗄️ MySQL Database
-![FoodGo Home](food6.png)
 
 ---
 # 🎯 Project Objective
