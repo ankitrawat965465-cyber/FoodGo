@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - FoodGo</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="nav">
+    <a class="brand" href="/">🍕 FoodGo</a>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/cart">🛒 Cart</a>
+    </nav>
+</header>
+
+<main class="container narrow">
+
+    <h1>Checkout</h1>
+
+    <div class="checkout-card">
+
+        <h2>Delivery Details</h2>
+
+        <form method="post" action="/order">
+
+            <label>Name</label>
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+            <label>Email</label>
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label>Phone</label>
+            <input
+                type="tel"
+                name="phone"
+                placeholder="Enter phone number"
+                required
+            >
+
+            <label>Delivery Address</label>
+            <textarea
+                name="address"
+                placeholder="Enter complete delivery address"
+                required
+            ></textarea>
+
+            <div class="checkout-total">
+                <span>Total Amount</span>
+                <strong>₹{{ total }}</strong>
+            </div>
+
+            <button class="btn full" type="submit">
+                Place Order 🍕
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

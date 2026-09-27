@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} - FoodGo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="nav">
+
+    <a class="brand" href="/">FoodGo</a>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/cart">Cart 🛒 ({{ cart_count }})</a>
+    </nav>
+
+</header>
+
+<main class="container">
+
+    <div class="restaurant-head">
+
+        <div class="food-icon big">
+            {{ restaurant.emoji }}
+        </div>
+
+        <div>
+            <h1>{{ restaurant.name }}</h1>
+
+            <p>
+                {{ restaurant.category }}
+                • ⭐ {{ restaurant.rating }}
+                • {{ restaurant.time }}
+            </p>
+        </div>
+
+    </div>
+
+    <h2>Menu</h2>
+
+    <div class="menu">
+
+        {% for item in restaurant["items"] %}
+
+        <div class="menu-item">
+
+            <div>
+                <h3>{{ item.name }}</h3>
+                <strong>₹{{ item.price }}</strong>
+            </div>
+
+            <form method="post" action="/cart/add/{{ item.id }}">
+
+                <button class="btn" type="submit">
+                    Add +
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
+
+</body>
+</html>

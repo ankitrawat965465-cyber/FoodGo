@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmed - FoodGo</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="nav">
+
+    <a class="brand" href="/">🍕 FoodGo</a>
+
+</header>
+
+<main class="container narrow">
+
+    <div class="success">
+
+        <div class="check">✓</div>
+
+        <h1>Order Confirmed!</h1>
+
+        <p>
+            Thank you {{ customer_name }}.
+            Your food is being prepared.
+        </p>
+
+        <div class="summary">
+
+            <p>
+                Order ID:
+                <b>#{{ order_id }}</b>
+            </p>
+
+            <p>
+                Items:
+                <b>{{ item_count }}</b>
+            </p>
+
+            <p>
+                Total:
+                <b>₹{{ total }}</b>
+            </p>
+
+        </div>
+
+        <div class="timeline">
+
+            <div>
+                <b>✓ Order placed</b>
+                <span>Completed</span>
+            </div>
+
+            <div>
+                <b>● Preparing</b>
+                <span>Restaurant is preparing</span>
+            </div>
+
+            <div>
+                <b>○ On the way</b>
+                <span>Delivery partner pickup</span>
+            </div>
+
+            <div>
+                <b>○ Delivered</b>
+                <span>Enjoy your meal!</span>
+            </div>
+
+        </div>
+
+        <a class="btn" href="/">
+            Order More Food
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: foodgo-mysql
+
+    environment:
+      MYSQL_DATABASE: foodgo
+      MYSQL_USER: foodgo
+      MYSQL_PASSWORD: foodgo123
+      MYSQL_ROOT_PASSWORD: root123
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - foodgo-mysql-data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    networks:
+      - foodgo-network
+
+  app:
+    build: .
+    container_name: foodgo-app
+
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: foodgo
+      MYSQL_USER: foodgo
+      MYSQL_PASSWORD: foodgo123
+      SECRET_KEY: foodgo-secret
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - mysql
+
+    networks:
+      - foodgo-network
+
+volumes:
+  foodgo-mysql-data:
+
+networks:
+  foodgo-network:
+    driver: bridge

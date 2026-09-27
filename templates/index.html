@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodGo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="nav">
+    <a class="brand" href="/">FoodGo</a>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/cart">Cart 🛒 ({{ cart_count }})</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div>
+        <span>FAST • FRESH • LOCAL</span>
+        <h1>Your favorite food,<br>delivered fast.</h1>
+        <p>Discover tasty meals from restaurants around you.</p>
+    </div>
+</section>
+
+<main class="container">
+
+    <h2>Popular Restaurants</h2>
+
+    <div class="grid">
+
+        {% for r in restaurants %}
+
+        <div class="card">
+
+            <div class="food-icon">
+                {{ r.emoji }}
+            </div>
+
+            <div class="card-body">
+
+                <h3>{{ r.name }}</h3>
+
+                <p>{{ r.category }}</p>
+
+                <div class="meta">
+                    ⭐ {{ r.rating }} • ⏱ {{ r.time }}
+                </div>
+
+                <a class="btn" href="/restaurant/{{ r.id }}">
+                    View Menu
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
+
+<footer>
+    FoodGo • DevOps Practice Project
+</footer>
+
+</body>
+</html>
