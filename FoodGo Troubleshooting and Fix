@@ -1,0 +1,446 @@
+# 🛠️ FoodGo Troubleshooting Guide
+
+This document contains the real troubleshooting issues faced while developing and running the FoodGo application.
+
+The purpose of this file is to understand the problem, identify the root cause, apply the fix, and verify the result.
+
+---
+
+## 1. MySQL Connection Problem
+
+### Problem
+
+The Flask application was running, but it was unable to connect to the MySQL database.
+
+### Root Cause
+
+The Flask application and MySQL were running in **different Docker containers**.
+
+Inside a Docker container, `localhost` refers to the **same container**, not another container.
+
+So the Flask application should not use:
+
+```text
+localhost
+```
+
+to connect to MySQL.
+
+### Fix
+
+Docker Compose provides a network between the containers.
+
+Our MySQL service name is:
+
+```text
+mysql
+```
+
+Therefore, the application uses:
+
+```yaml
+MYSQL_HOST: mysql
+MYSQL_PORT: 3306
+```
+
+### Architecture
+
+```text
+FoodGo App Container
+       |
+       | MYSQL_HOST=mysql
+       |
+       ↓
+MySQL Container
+```
+
+### Verification
+
+Check running containers:
+
+```bash
+docker ps
+```
+
+Check application logs:
+
+```bash
+docker logs foodgo-app
+```
+
+---
+
+# 2. Port 8080 Already in Use
+
+### Problem
+
+When starting the FoodGo application, Docker showed an error similar to:
+
+```text
+Bind for 0.0.0.0:8080 failed:
+port is already allocated
+```
+
+### Root Cause
+
+Another container was already using port `8080`.
+
+### Check
+
+Run:
+
+```bash
+docker ps
+```
+
+Look for:
+
+```text
+0.0.0.0:8080->8080/tcp
+```
+
+### Fix
+
+Stop the container that is using port `8080`:
+
+```bash
+docker stop <container_name>
+```
+
+Then start FoodGo:
+
+```bash
+docker compose up -d
+```
+
+### Verification
+
+```bash
+docker ps
+```
+
+FoodGo should show:
+
+```text
+0.0.0.0:8080->8080/tcp
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# 3. MySQL `init.sql` Did Not Run Again
+
+### Problem
+
+I changed the `database/init.sql` file, but the changes were not applied to the existing MySQL database.
+
+### Root Cause
+
+MySQL Docker initialization scripts are executed when the MySQL data directory is initialized for the first time.
+
+FoodGo uses a Docker volume:
+
+```yaml
+volumes:
+  - foodgo-mysql-data:/var/lib/mysql
+```
+
+The database data is stored inside this volume.
+
+If the volume already contains MySQL data, changing `init.sql` does not automatically execute the file again.
+
+### Fix
+
+If the existing database data is not required, remove the containers and volume:
+
+```bash
+docker compose down -v
+```
+
+Then start the application again:
+
+```bash
+docker compose up -d
+```
+
+MySQL will initialize again and execute:
+
+```text
+database/init.sql
+```
+
+### ⚠️ Important
+
+This command:
+
+```bash
+docker compose down -v
+```
+
+removes the Docker volume.
+
+Therefore, existing MySQL data can be deleted.
+
+Do not use it if important database data needs to be preserved.
+
+---
+
+# 4. Jinja Template Error
+
+### Problem
+
+The restaurant page showed this error:
+
+```text
+TypeError: 'builtin_function_or_method' object is not iterable
+```
+
+### Root Cause
+
+The template contained:
+
+```jinja2
+{% for item in restaurant.items %}
+```
+
+`restaurant` is a Python dictionary.
+
+Python dictionaries have a built-in method called:
+
+```python
+items()
+```
+
+Because of this, `.items` could be interpreted as the dictionary method instead of the `items` key.
+
+### Fix
+
+Use bracket notation:
+
+```jinja2
+{% for item in restaurant["items"] %}
+```
+
+This clearly tells Jinja to access the dictionary key named `items`.
+
+### Verification
+
+Refresh the restaurant page:
+
+```text
+http://localhost:8080/restaurant/1
+```
+
+The menu items should now appear correctly.
+
+---
+
+# 5. Container Is Not Working
+
+### Problem
+
+Sometimes the application container may stop or fail to start.
+
+### First Check
+
+Run:
+
+```bash
+docker ps
+```
+
+If the container is not running, check all containers:
+
+```bash
+docker ps -a
+```
+
+### Check Application Logs
+
+```bash
+docker logs foodgo-app
+```
+
+### Check MySQL Logs
+
+```bash
+docker logs foodgo-mysql
+```
+
+### Follow Logs
+
+To continuously monitor application logs:
+
+```bash
+docker logs -f foodgo-app
+```
+
+Press:
+
+```text
+Ctrl + C
+```
+
+to stop following the logs.
+
+### Why Logs Are Important
+
+Docker logs usually show the actual reason for an application failure.
+
+For example:
+
+```text
+Database connection error
+Port error
+Python exception
+Missing configuration
+```
+
+So the first step in troubleshooting should usually be:
+
+```bash
+docker logs <container_name>
+```
+
+---
+
+# 6. Verify MySQL Database
+
+To check whether the FoodGo database is working:
+
+```bash
+docker exec -it foodgo-mysql mysql -ufoodgo -pfoodgo123 foodgo
+```
+
+After entering MySQL, check the tables:
+
+```sql
+SHOW TABLES;
+```
+
+Expected result:
+
+```text
+customers
+orders
+order_items
+```
+
+### Check Customers
+
+```sql
+SELECT * FROM customers;
+```
+
+### Check Orders
+
+```sql
+SELECT * FROM orders;
+```
+
+### Check Order Items
+
+```sql
+SELECT * FROM order_items;
+```
+
+Exit MySQL:
+
+```sql
+exit;
+```
+
+---
+
+# 7. Docker Image Was Not Updated
+
+### Problem
+
+I changed Python, HTML, or CSS files, but the browser still showed the old version.
+
+### Root Cause
+
+The running container may still be using the old Docker image.
+
+### Fix
+
+Rebuild the application:
+
+```bash
+docker compose up -d --build
+```
+
+The `--build` option tells Docker to rebuild the image before starting the container.
+
+### Without `--build`
+
+```bash
+docker compose up -d
+```
+
+This normally starts the existing image.
+
+### With `--build`
+
+```bash
+docker compose up -d --build
+```
+
+This rebuilds the image and then starts the containers.
+
+---
+
+# 8. Useful Docker Troubleshooting Commands
+
+## Check running containers
+
+```bash
+docker ps
+```
+
+## Check all containers
+
+```bash
+docker ps -a
+```
+
+## Check application logs
+
+```bash
+docker logs foodgo-app
+```
+
+## Check MySQL logs
+
+```bash
+docker logs foodgo-mysql
+```
+
+## Check Compose services
+
+```bash
+docker compose ps
+```
+
+## Rebuild application
+
+```bash
+docker compose up -d --build
+```
+
+## Stop FoodGo
+
+```bash
+docker compose down
+```
+
+## Start FoodGo
+
+```bash
+docker compose up -d
+```
