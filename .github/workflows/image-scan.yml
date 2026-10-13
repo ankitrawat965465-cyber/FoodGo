@@ -16,7 +16,7 @@ jobs:
         run: docker build -t foodgo-app:${{ github.sha }} .  #-t — image ko naam aur tag deta hai.
       #{{ github.sha }} — jis Git commit par workflow chal raha hai, uska unique commit hash.
       - name: Scan image with Trivy           #Image ki vulnerabilities scan karta hai
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: foodgo-app:${{ github.sha }}  #Kaunsi image scan karni hai.
           format: table
