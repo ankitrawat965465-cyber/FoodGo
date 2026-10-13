@@ -1,0 +1,27 @@
+name: FoodGo Code Quality
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout FoodGo code     #GitHub se FoodGo code leta hai
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12        #Application ke compatible Python version ko set karta hai
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install FoodGo dependencies  #Flask, MySQL connector, Flake8 aur Bandit install karta hai
+        run: pip install -r requirement.txt
+         
+
+      - name: Run Linter code quality check   #Python code ke style aur common coding issues check karta hai
+        run: flake8 app.py 
+
+      - name: Run SAST security scan   #Python code mein possible security issues scan karta hai
+        run: bandit -r app.py

@@ -1,0 +1,18 @@
+name: FoodGo Docker Lint
+
+on:
+  workflow_call:
+
+jobs:
+  docker-lint:
+    name: Lint Dockerfile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout FoodGo code
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint                 #Dockerfile ko lint karta hai.
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile               #batata hai ki kis file ko check karna hai.

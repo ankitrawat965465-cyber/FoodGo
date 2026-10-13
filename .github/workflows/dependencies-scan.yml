@@ -1,0 +1,24 @@
+name: FoodGo Dependencies Scan
+
+on:
+  workflow_call:
+
+jobs:
+  dependency-scan:
+    name: Scan Python dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout FoodGo code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pip-audit                     #security scanner ko ready karna.
+        run: python -m pip install pip-audit
+
+      - name: Scan dependencies                     #scanner se requirements.txt ke packages check karna.
+        run: pip-audit -r requirements.txt

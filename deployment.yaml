@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foodgo
+  namespace: foodgo
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: foodgo
+
+  template:
+    metadata:
+      labels:
+        app: foodgo
+
+    spec:
+      containers:
+        - name: foodgo
+          image: foodgo-app:latest
+          imagePullPolicy: Never
+
+          envFrom:
+            - configMapRef:
+                name: foodgo-config
+            - secretRef:
+                name: foodgo-secret
+
+          ports:
+            - containerPort: 8080
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3    
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

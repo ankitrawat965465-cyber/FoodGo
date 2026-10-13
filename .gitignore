@@ -3,3 +3,6 @@ venv/
 __pycache__/
 *.pyc
 .git/
+# Kubernetes secrets
+secret.yaml
+secrets.yaml
