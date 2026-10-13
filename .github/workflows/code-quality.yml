@@ -28,3 +28,4 @@ jobs:
 
       - name: Run SAST security scan   #Python code mein possible security issues scan karta hai
         run: bandit -r app.py
+        
