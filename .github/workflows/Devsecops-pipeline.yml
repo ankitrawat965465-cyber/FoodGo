@@ -1,3 +1,4 @@
+
 name: DevSecOps End to End Pipeline
 
 on:
@@ -6,19 +7,24 @@ on:
 
 jobs:
   code-quality:
+    name: Code Quality - Flake8 & Bandit
     uses: ./.github/workflows/code-quality.yml
 
   secrets-scan:
+    name: Secrets Scan
     uses: ./.github/workflows/secrets-scan.yml
     secrets: inherit
 
   dependencies-scan:
+    name: Dependency Security Scan
     uses: ./.github/workflows/dependencies-scan.yml
 
   docker-scan:
+    name: Dockerfile Lint
     uses: ./.github/workflows/docker-lint.yml
 
   image-scan:
+    name: Container Image Scan
     needs:
       - code-quality
       - secrets-scan
@@ -27,6 +33,7 @@ jobs:
     uses: ./.github/workflows/image-scan.yml
 
   build:
+    name: Build & Push to Docker Hub
     needs: image-scan
     uses: ./.github/workflows/docker-build-push.yml
     secrets: inherit
